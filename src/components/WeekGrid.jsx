@@ -8,7 +8,7 @@ function cellState(day) {
 }
 
 const cellClasses = {
-  full: 'bg-success border-success text-success-content',
+  full: 'bg-success border-success text-success-content shadow-sm',
   hollow: 'border-success border-2 bg-transparent',
   empty: 'border border-base-300 bg-base-200',
   faint: 'border border-dashed border-base-300 bg-base-200/40',
@@ -30,15 +30,27 @@ export function WeekGrid({ days }) {
             <span className="text-xs text-base-content/60">
               {WEEKDAY_LABELS[new Date(day.date).getDay()]}
             </span>
-            <span className="text-xs text-base-content/40">{new Date(day.date).getDate()}</span>
-            <div className={`h-10 w-full rounded-lg ${cellClasses[cellState(day)]}`} />
+            <span className={`text-xs ${day.isToday ? 'font-bold text-primary' : 'text-base-content/40'}`}>
+              {new Date(day.date).getDate()}
+            </span>
+            <div
+              className={`anim-cell h-10 w-full rounded-lg transition-transform duration-200 hover:scale-110 ${
+                cellClasses[cellState(day)]
+              } ${day.isToday ? 'ring-2 ring-primary/60 ring-offset-1 ring-offset-base-200' : ''}`}
+              style={{ '--i': index + 1 }}
+              title={`${day.dayFullLabel}: ${day.taken}/${day.total}`}
+            />
           </div>
         ))}
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
-        {legend.map(({ state, label }) => (
-          <div key={state} className="flex items-center gap-2">
+        {legend.map(({ state, label }, index) => (
+          <div
+            key={state}
+            className="anim-fade flex items-center gap-2"
+            style={{ '--i': index + 8 }}
+          >
             <div className={`h-4 w-4 shrink-0 rounded ${cellClasses[state]}`} />
             <span className="text-xs text-base-content/60">{label}</span>
           </div>

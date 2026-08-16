@@ -62,7 +62,7 @@ export function Week() {
   if (data.meds.length === 0) {
     return (
       <div className="max-w-md mx-auto px-4 py-6 pb-36">
-        <h1 className="text-xl font-bold mb-6">Hafta</h1>
+        <h1 className="anim-rise text-xl font-bold mb-6">Hafta</h1>
         <EmptyState
           title="Birinchi kuningiz."
           body="Ertaga bu yer to'la boshlaydi."
@@ -74,13 +74,29 @@ export function Week() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-6 pb-36">
-      <h1 className="text-xl font-bold mb-1">Hafta</h1>
-      <div className="flex items-center gap-2 mb-1">
-        <span className="badge badge-primary">{streak} kunlik seriya</span>
-      </div>
-      <p className="text-sm text-base-content/60 mb-6">
-        Bu hafta {summary.total} dozadan {summary.taken} tasini belgiladingiz.
-      </p>
+      <header className="anim-rise mb-6">
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="text-xl font-bold">Hafta</h1>
+          <span className="anim-pop badge badge-primary gap-1.5 py-3 shadow-2xs" style={{ '--i': 2 }}>
+            <span className="anim-ember inline-block" aria-hidden="true">🔥</span>
+            {streak} kunlik seriya
+          </span>
+        </div>
+        <div className="anim-underline mt-1 h-0.5 w-12 rounded-full bg-primary/70" />
+
+        <div className="mt-4 space-y-1.5">
+          <p className="text-sm text-base-content/60">
+            Bu hafta {summary.total} dozadan {summary.taken} tasini belgiladingiz.
+          </p>
+          <progress
+            className="progress progress-primary w-full h-2 rounded-full"
+            value={summary.taken}
+            max={summary.total || 1}
+            aria-label={`Bu hafta ${summary.total} dozadan ${summary.taken} tasi belgilangan`}
+          />
+        </div>
+      </header>
+
       <WeekGrid days={summary.days} />
       <Nav />
     </div>

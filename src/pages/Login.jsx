@@ -33,7 +33,7 @@ export function Login() {
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+          <div className="anim-pop w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-7 w-7"
@@ -48,19 +48,22 @@ export function Login() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 3h6M12 3v2" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Dori Vaqti</h1>
-          <p className="text-sm text-base-content/60 mt-1">
+          <h1 className="anim-rise text-2xl font-bold tracking-tight" style={{ '--i': 1 }}>
+            Dori Vaqti
+          </h1>
+          <p className="anim-rise text-sm text-base-content/60 mt-1" style={{ '--i': 2 }}>
             Dorilaringizni ichdingizmi — shuni belgilab boring.
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="card bg-base-100 border border-base-200 shadow-sm"
+          className="anim-rise card bg-base-100 border border-base-200 shadow-sm"
+          style={{ '--i': 3 }}
         >
           <div className="card-body gap-3 p-6">
             {error && (
-              <div role="alert" className="alert alert-error text-sm py-2">
+              <div role="alert" className="anim-rise alert alert-error text-sm py-2">
                 <span>{error}</span>
               </div>
             )}
@@ -72,7 +75,7 @@ export function Login() {
                 type="email"
                 required
                 autoComplete="email"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full transition-all duration-200 focus:border-primary focus:shadow-sm"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={submitting}
@@ -87,7 +90,7 @@ export function Login() {
                 required
                 minLength={6}
                 autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full transition-all duration-200 focus:border-primary focus:shadow-sm"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={submitting}
@@ -96,7 +99,7 @@ export function Login() {
 
             <button
               type="submit"
-              className="btn btn-primary mt-3 min-h-[44px]"
+              className="btn btn-primary tap mt-3 min-h-[44px] hover:brightness-105 hover:shadow-md"
               disabled={submitting}
             >
               {submitting ? (

@@ -205,7 +205,7 @@ export function Today() {
       <main className="flex-1 px-4 pt-6 pb-24 w-full">
         {/* Error Toast Notification */}
         {errorMessage && (
-          <div role="alert" className="alert alert-error mb-4 shadow-sm text-sm py-3 px-4 flex items-center justify-between rounded-xl">
+          <div role="alert" className="anim-rise alert alert-error mb-4 shadow-sm text-sm py-3 px-4 flex items-center justify-between rounded-xl">
             <div className="flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -257,7 +257,7 @@ export function Today() {
           </section>
         ) : meds.length === 0 ? (
           /* State 2: Empty State (No active medicines) */
-          <section className="py-12" aria-label="Dorilar mavjud emas">
+          <section className="anim-rise py-12" aria-label="Dorilar mavjud emas">
             <EmptyState
               title="Dorilar ro'yxati bo'sh"
               body="Boshlash uchun birinchi doringizni qo'shing."
@@ -269,26 +269,28 @@ export function Today() {
           /* State 3: Today's Schedule & Dose List */
           <section className="space-y-5" aria-label="Bugungi reja">
             {/* Today's Header */}
-            <header className="space-y-3 pb-2 border-b border-base-200/80">
+            <header className="anim-rise space-y-3 pb-2 border-b border-base-200/80">
               <div className="flex items-center justify-between gap-2">
                 <div>
                   <h1 className="text-xl font-bold tracking-tight text-base-content capitalize">
                     {formatUzbekDate(now)}
                   </h1>
+                  <div className="anim-underline mt-1 h-0.5 w-12 rounded-full bg-primary/70" />
                 </div>
 
                 {/* Streak Badge */}
                 <div
-                  className={`badge ${
+                  className={`anim-pop badge ${
                     streak > 0
                       ? 'badge-primary badge-outline font-semibold gap-1.5 py-3 px-3 shadow-2xs'
                       : 'badge-ghost text-xs text-base-content/60 py-3 px-2.5'
                   }`}
+                  style={{ '--i': 2 }}
                   title={`${streak} kunlik seriya`}
                 >
                   {streak > 0 ? (
                     <>
-                      <span aria-hidden="true">🔥</span>
+                      <span className="anim-ember inline-block" aria-hidden="true">🔥</span>
                       <span>{streak} kun ketma-ket</span>
                     </>
                   ) : (
@@ -314,10 +316,11 @@ export function Today() {
 
             {/* Dose Cards List */}
             <div className="space-y-3 pt-1">
-              {doseList.map((dose) => (
+              {doseList.map((dose, index) => (
                 <DoseCard
                   key={dose.key}
                   dose={dose}
+                  index={index + 1}
                   onTaken={handleTaken}
                   onSkipped={handleSkipped}
                   busy={busyKey === dose.key}

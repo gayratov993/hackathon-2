@@ -9,7 +9,7 @@ import React from 'react'
  * @param {Function} onSkipped - Callback when user logs the dose as 'skipped'
  * @param {boolean} busy - True if this dose is currently performing an async action
  */
-export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
+export function DoseCard({ dose, onTaken, onSkipped, busy = false, index = 0 }) {
   if (!dose) return null
 
   const { medName, doseText, timeStr, status } = dose
@@ -20,7 +20,8 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
   const canAct = isPending || isOverdue
 
   // Visual container styles based on state
-  let containerClasses = 'card bg-base-100 border transition-all duration-200 rounded-2xl overflow-hidden'
+  let containerClasses =
+    'card bg-base-100 border rounded-2xl overflow-hidden anim-rise lift transition-colors duration-300'
   if (isOverdue) {
     containerClasses += ' border-warning/80 bg-warning/5 shadow-sm hover:shadow-md'
   } else if (isTaken) {
@@ -35,6 +36,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
   return (
     <article
       className={containerClasses}
+      style={{ '--i': index }}
       data-status={status}
       aria-label={`${medName} - ${timeStr}`}
     >
@@ -59,10 +61,10 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
 
             {/* Subtitle / Status note for overdue */}
             {isOverdue && (
-              <div className="mt-1 flex items-center gap-1.5 text-xs font-medium text-warning">
+              <div className="anim-fade mt-1 flex items-center gap-1.5 text-xs font-medium text-warning">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-3.5 w-3.5 shrink-0"
+                  className="h-3.5 w-3.5 shrink-0 animate-pulse"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                   aria-hidden="true"
@@ -81,7 +83,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
           {/* Time & Completed Badges */}
           <div className="flex items-center gap-2 shrink-0">
             {isTaken && (
-              <div className="badge badge-success text-success-content gap-1 text-xs font-semibold py-2.5 px-2.5 shadow-xs">
+              <div className="anim-pop badge badge-success text-success-content gap-1 text-xs font-semibold py-2.5 px-2.5 shadow-xs">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-3.5 w-3.5 stroke-2"
@@ -97,7 +99,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
             )}
 
             {isSkipped && (
-              <div className="badge badge-neutral badge-outline text-xs py-2.5 px-2.5 text-base-content/60">
+              <div className="anim-pop badge badge-neutral badge-outline text-xs py-2.5 px-2.5 text-base-content/60">
                 <span>O&apos;tkazib yuborildi</span>
               </div>
             )}
@@ -121,11 +123,11 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
 
         {/* Action Buttons: Pending or Overdue states */}
         {canAct && (
-          <div className="flex items-center gap-2.5 mt-4 pt-2 border-t border-base-200/60">
+          <div className="anim-fade flex items-center gap-2.5 mt-4 pt-2 border-t border-base-200/60">
             {/* Ichdim button */}
             <button
               type="button"
-              className="btn btn-primary flex-1 min-h-[44px] h-[44px] rounded-xl font-medium shadow-xs hover:shadow active:scale-[0.98] transition-all disabled:opacity-50"
+              className="btn btn-primary tap group/take flex-1 min-h-[44px] h-[44px] rounded-xl font-medium shadow-xs hover:shadow-md hover:brightness-105 disabled:opacity-50"
               onClick={() => onTaken?.(dose)}
               disabled={busy}
               aria-label={`${medName} dorisini ichdim`}
@@ -136,7 +138,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
                 <>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 stroke-2"
+                    className="h-4 w-4 stroke-2 transition-transform duration-300 group-hover/take:scale-125"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -152,7 +154,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false }) {
             {/* O'tkazib yubordim button */}
             <button
               type="button"
-              className="btn btn-ghost flex-1 min-h-[44px] h-[44px] rounded-xl font-normal text-xs sm:text-sm text-base-content/70 hover:text-base-content hover:bg-base-200/60 active:scale-[0.98] transition-all disabled:opacity-50"
+              className="btn btn-ghost tap flex-1 min-h-[44px] h-[44px] rounded-xl font-normal text-xs sm:text-sm text-base-content/70 hover:text-base-content hover:bg-base-200/60 disabled:opacity-50"
               onClick={() => onSkipped?.(dose)}
               disabled={busy}
               aria-label={`${medName} dorisini o'tkazib yubordim`}

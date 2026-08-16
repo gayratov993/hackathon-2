@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { supabase } from './lib/supabase'
+import { Landing } from './pages/Landing'
 import { Login } from './pages/Login'
 import { Onboarding } from './pages/Onboarding'
 import { Today } from './pages/Today'
@@ -36,6 +37,22 @@ function RequireMeds({ children }) {
   return children
 }
 
+// Public marketing page for signed-out visitors (and crawlers); signed-in
+// users see the app exactly as before. Keeps "/" crawlable for SEO/GEO/AEO
+// without gating it behind RequireAuth's redirect-to-/login.
+function HomeRoute() {
+  const { session, loading } = useAuth()
+
+  if (loading) return <div className="skeleton h-32 w-full" />
+  if (!session) return <Landing />
+
+  return (
+    <RequireMeds>
+      <Today />
+    </RequireMeds>
+  )
+}
+
 function AppRoutes() {
   return (
     <Routes>
@@ -48,16 +65,7 @@ function AppRoutes() {
           </RequireAuth>
         }
       />
-      <Route
-        path="/"
-        element={
-          <RequireAuth>
-            <RequireMeds>
-              <Today />
-            </RequireMeds>
-          </RequireAuth>
-        }
-      />
+      <Route path="/" element={<HomeRoute />} />
       <Route
         path="/week"
         element={

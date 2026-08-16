@@ -9,25 +9,41 @@ const links = [
 export function Nav() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-10">
-      <div className="dock max-w-md mx-auto border-t border-base-200">
+      <div className="dock max-w-md mx-auto border-t border-base-200 bg-base-100/95 backdrop-blur-md">
         {links.map(({ to, label, icon }) => (
           <NavLink
             key={to}
             to={to}
             end={to === '/'}
-            className={({ isActive }) => (isActive ? 'dock-active' : '')}
+            className={({ isActive }) =>
+              `group tap relative ${isActive ? 'dock-active text-primary' : 'text-base-content/60'}`
+            }
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
-            </svg>
-            <span className="dock-label">{label}</span>
+            {({ isActive }) => (
+              <>
+                <span
+                  aria-hidden="true"
+                  className={`absolute top-0 h-0.5 rounded-full bg-primary transition-all duration-300 ease-out ${
+                    isActive ? 'w-8 opacity-100' : 'w-0 opacity-0'
+                  }`}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-5 w-5 transition-transform duration-300 ease-out ${
+                    isActive ? 'scale-110' : 'group-hover:scale-105'
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
+                </svg>
+                <span className={`dock-label transition-all duration-300 ${isActive ? 'font-semibold' : ''}`}>
+                  {label}
+                </span>
+              </>
+            )}
           </NavLink>
         ))}
       </div>

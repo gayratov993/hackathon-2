@@ -9,15 +9,44 @@ import { MedForm } from '../components/MedForm'
 const toTime = (value) => (/^\d{2}:\d{2}/.test(value) ? value.slice(0, 5) : value)
 
 export function Settings() {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
   const navigate = useNavigate()
   const [meds, setMeds] = useState(null)
   const [error, setError] = useState(null)
   const [editingMed, setEditingMed] = useState(null)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [displayName, setDisplayName] = useState('')
+  const [savingName, setSavingName] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
+  const [profile, setProfile] = useState(null)
+  const [linking, setLinking] = useState(false)
   const editDialog = useRef(null)
   const deleteDialog = useRef(null)
+
+  const loadProfile = useCallback(async () => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('telegram_chat_id, telegram_link_code')
+      .eq('id', user.id)
+      .maybeSingle()
+    setProfile(data ?? null)
+  }, [user])
+
+  async function generateTelegramCode() {
+    setLinking(true)
+    const code = Math.random().toString(36).slice(2, 8).toUpperCase()
+    const { error } = await supabase
+      .from('profiles')
+      .update({ telegram_link_code: code })
+      .eq('id', user.id)
+    setLinking(false)
+    if (error) {
+      setError(error.message)
+      return
+    }
+    loadProfile()
+  }
 
   const load = useCallback(async () => {
     const { data, error } = await supabase
@@ -36,6 +65,44 @@ export function Settings() {
   useEffect(() => {
     if (user) load()
   }, [user, load])
+
+  useEffect(() => {
+    if (user) loadProfile()
+  }, [user, loadProfile])
+
+  useEffect(() => {
+    if (!user) return
+    supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle()
+      .then(({ data }) => setDisplayName(data?.display_name ?? ''))
+  }, [user])
+
+  async function handleSaveName(e) {
+    e.preventDefault()
+    setSavingName(true)
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({ id: user.id, display_name: displayName.trim() || null })
+    setSavingName(false)
+    if (error) {
+      setError(error.message)
+      return
+    }
+  }
+
+  async function handleSignOut() {
+    setSigningOut(true)
+    const { error } = await signOut()
+    if (error) {
+      setSigningOut(false)
+      setError(error.message)
+      return
+    }
+    navigate('/login', { replace: true })
+  }
 
   function openEdit(med) {
     setEditingMed(med)
@@ -103,13 +170,47 @@ export function Settings() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-6 pb-36">
-      <h1 className="text-xl font-bold mb-6">Sozlamalar</h1>
+      <div className="anim-rise mb-6 flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-bold">Sozlamalar</h1>
+          <div className="anim-underline mt-1 h-0.5 w-12 rounded-full bg-primary/70" />
+        </div>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm text-error"
+          onClick={handleSignOut}
+          disabled={signingOut}
+        >
+          {signingOut ? <span className="loading loading-spinner loading-xs" /> : 'Chiqish'}
+        </button>
+      </div>
 
       {error && (
-        <div className="alert alert-error mb-4 text-sm" role="alert">
+        <div className="anim-rise alert alert-error mb-4 text-sm" role="alert">
           <span>{error}</span>
         </div>
       )}
+
+      <section className="anim-rise mb-6 card bg-base-100 border border-base-200 p-4" style={{ '--i': 0 }}>
+        <h2 className="font-semibold mb-2">Profil</h2>
+        <form onSubmit={handleSaveName} className="flex flex-col gap-2">
+          <label className="fieldset-label" htmlFor="displayName">
+            To'liq ism
+          </label>
+          <input
+            id="displayName"
+            type="text"
+            className="input input-bordered w-full"
+            placeholder="Masalan: Aziz Aliyev"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            disabled={savingName}
+          />
+          <button type="submit" className="btn btn-primary btn-sm self-start tap" disabled={savingName}>
+            {savingName ? <span className="loading loading-spinner loading-xs" /> : 'Saqlash'}
+          </button>
+        </form>
+      </section>
 
       {meds.length === 0 ? (
         <EmptyState
@@ -120,8 +221,14 @@ export function Settings() {
         />
       ) : (
         <ul className="flex flex-col gap-2">
-          {meds.map((med) => (
-            <li key={med.id} className="card bg-base-100 border border-base-300 p-4">
+          {meds.map((med, index) => (
+            <li
+              key={med.id}
+              className={`anim-rise lift card border p-4 ${
+                med.active ? 'bg-base-100 border-base-300' : 'bg-base-200/40 border-base-200'
+              }`}
+              style={{ '--i': index + 1 }}
+            >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className={`font-semibold ${med.active ? '' : 'text-base-content/50'}`}>
@@ -131,14 +238,16 @@ export function Settings() {
                     <p className="text-sm text-base-content/60">{med.dose_text}</p>
                   )}
                   <p className="text-sm text-base-content/60">{med.times.map(toTime).join(' · ')}</p>
-                  {!med.active && <span className="badge badge-ghost badge-sm mt-1">faol emas</span>}
+                  {!med.active && (
+                    <span className="anim-pop badge badge-ghost badge-sm mt-1">faol emas</span>
+                  )}
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1">
-                  <button className="btn btn-ghost btn-xs" onClick={() => openEdit(med)}>
+                  <button className="btn btn-ghost btn-xs tap" onClick={() => openEdit(med)}>
                     Tahrirlash
                   </button>
                   <button
-                    className={`btn btn-ghost btn-xs ${
+                    className={`btn btn-ghost btn-xs tap ${
                       med.active ? 'text-error' : 'text-base-content/60'
                     }`}
                     onClick={() => toggleActive(med)}
@@ -152,7 +261,34 @@ export function Settings() {
         </ul>
       )}
 
-      <section className="mt-8">
+      <section className="anim-rise mt-8 card bg-base-100 border border-base-200 p-4" style={{ '--i': 4 }}>
+        <h2 className="font-semibold mb-2">Telegram orqali eslatma</h2>
+        {profile?.telegram_chat_id ? (
+          <p className="text-sm text-success">Ulangan. Dorilaringiz vaqti kelganda Telegramga eslatma yuboriladi.</p>
+        ) : (
+          <>
+            <p className="text-sm text-base-content/60 mb-3">
+              Botga ulaning va dorilaringiz vaqti kelganda shu yerdan tashqari Telegramda ham eslatma oling.
+            </p>
+            {profile?.telegram_link_code ? (
+              <div className="flex flex-col gap-2">
+                <p className="text-sm">
+                  Botga o'ting va yuboring: <code className="font-mono font-bold">/start {profile.telegram_link_code}</code>
+                </p>
+                <button className="btn btn-outline btn-sm tap w-fit" disabled={linking} onClick={generateTelegramCode}>
+                  Yangi kod olish
+                </button>
+              </div>
+            ) : (
+              <button className="btn btn-outline btn-sm tap" disabled={linking} onClick={generateTelegramCode}>
+                {linking ? <span className="loading loading-spinner loading-xs" /> : 'Ulanish kodini olish'}
+              </button>
+            )}
+          </>
+        )}
+      </section>
+
+      <section className="anim-rise mt-4 card bg-base-100 border border-base-200 p-4" style={{ '--i': 4 }}>
         <h2 className="font-semibold mb-2">Ma'lumotlaringiz haqida</h2>
         <p className="text-sm text-base-content/60">
           Biz saqlaymiz: siz kiritgan nom, miqdor va vaqtlar, hamda siz belgilagan doza holati.
@@ -162,9 +298,9 @@ export function Settings() {
         </p>
       </section>
 
-      <div className="mt-8">
+      <div className="anim-rise mt-8" style={{ '--i': 5 }}>
         <button
-          className="btn btn-error btn-block"
+          className="btn btn-error btn-block tap hover:shadow-md"
           onClick={() => deleteDialog.current?.showModal()}
         >
           Barcha ma'lumotlarimni o'chirish

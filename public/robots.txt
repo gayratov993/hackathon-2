@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /onboarding
+Disallow: /week
+Disallow: /settings
+
+Sitemap: https://hackathon-2-production-b692.up.railway.app/sitemap.xml

@@ -29,13 +29,18 @@ export function Onboarding() {
 
   return (
     <div className="max-w-md mx-auto min-h-dvh flex flex-col justify-center px-6 py-10">
-      <h1 className="text-2xl font-bold mb-6">Bitta doridan boshlaymiz.</h1>
+      <div className="anim-rise mb-6">
+        <h1 className="text-2xl font-bold">Bitta doridan boshlaymiz.</h1>
+        <div className="anim-underline mt-2 h-0.5 w-16 rounded-full bg-primary/70" />
+      </div>
       {error && (
-        <div className="alert alert-error mb-4 text-sm" role="alert">
+        <div className="anim-rise alert alert-error mb-4 text-sm" role="alert">
           <span>{error}</span>
         </div>
       )}
-      <MedForm onSubmit={handleSubmit} submitting={submitting} />
+      <div className="anim-rise" style={{ '--i': 2 }}>
+        <MedForm onSubmit={handleSubmit} submitting={submitting} />
+      </div>
     </div>
   )
 }
