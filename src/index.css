@@ -3,7 +3,7 @@
 /* daisyUI 5 only bundles light/dark unless themes are named, so the
    data-theme="emerald" on <html> silently fell back to light. */
 @plugin "daisyui" {
-  themes: emerald --default;
+  themes: emerald --default, forest --prefersdark;
 }
 
 html,

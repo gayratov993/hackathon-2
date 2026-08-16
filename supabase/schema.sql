@@ -9,9 +9,12 @@ create table meds (
   user_id uuid not null references auth.users on delete cascade,
   name text not null,              -- user's own label, e.g. "oq tabletka"
   dose_text text,                  -- free text the user typed, e.g. "1 tabletka"
+  notes text,                      -- how to take it, e.g. "ovqatdan keyin". Never a diagnosis:
+                                   -- the form says so and caps this at 200 chars.
   times time[] not null,           -- ['08:00','20:00']
   active boolean not null default true,
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  constraint meds_notes_len check (notes is null or char_length(notes) <= 200)
 );
 
 create table med_logs (

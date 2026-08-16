@@ -1,3 +1,5 @@
+import { useLanguage } from '../context/LanguageContext'
+
 const WEEKDAY_LABELS = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh']
 
 function cellState(day) {
@@ -15,13 +17,15 @@ const cellClasses = {
 }
 
 const legend = [
-  { state: 'full', label: 'belgilangan' },
-  { state: 'hollow', label: 'qisman yoki o\'tkazilgan' },
-  { state: 'empty', label: 'belgilanmagan' },
-  { state: 'faint', label: 'dori hali yo\'q edi' },
+  { state: 'full', key: 'week.legend.full' },
+  { state: 'hollow', key: 'week.legend.hollow' },
+  { state: 'empty', key: 'week.legend.empty' },
+  { state: 'faint', key: 'week.legend.faint' },
 ]
 
 export function WeekGrid({ days }) {
+  const { t } = useLanguage()
+
   return (
     <div>
       <div className="grid grid-cols-7 gap-1">
@@ -45,14 +49,14 @@ export function WeekGrid({ days }) {
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
-        {legend.map(({ state, label }, index) => (
+        {legend.map(({ state, key }, index) => (
           <div
             key={state}
             className="anim-fade flex items-center gap-2"
             style={{ '--i': index + 8 }}
           >
             <div className={`h-4 w-4 shrink-0 rounded ${cellClasses[state]}`} />
-            <span className="text-xs text-base-content/60">{label}</span>
+            <span className="text-xs text-base-content/60">{t(key)}</span>
           </div>
         ))}
       </div>

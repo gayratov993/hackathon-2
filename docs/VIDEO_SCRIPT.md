@@ -1,4 +1,4 @@
-# Dori Vaqti — Video Taqdimot Ssenariysi 🎬
+# MedTime — Video Taqdimot Ssenariysi 🎬
 **Davomiyligi:** ~3:30 daqiqa (3:00 dan kam bo'lmasin, 4:00 dan oshmasin)
 **Mavzu:** Sog'liq, sport va tibbiyot
 **Spiker tili:** O'zbek tili
@@ -15,9 +15,9 @@ Dori ichishni unutish yoki aksincha, adashib ikki marta ichib qo'yish sog'liq uc
 ---
 
 ## ⏱️ 0:30 – 1:00 | Yechim va Konsepsiya (30 soniya)
-> **Kadr:** Dori Vaqti ilovasining kirish ekrani / logotipi.
+> **Kadr:** MedTime ilovasining kirish ekrani / logotipi.
 
-"Biz o'nlab chala funksiyalarni emas, aynan **bitta odatni** boshidan oxirigacha mukammal hal qiluvchi **'Dori Vaqti'** ilovasini yaratdik. 
+"Biz o'nlab chala funksiyalarni emas, aynan **bitta odatni** boshidan oxirigacha mukammal hal qiluvchi **'MedTime'** ilovasini yaratdik. 
 
 Bizning bosh maqsadimiz — foydalanuvchiga hech qanday tibbiy tashxis qo'ymasdan, ortiqcha aql o'rgatmasdan, faqat kunlik dozani o'z vaqtida eslatish, uni bir teginishda belgilash va haftalik izchillikni ko'rsatishdir."
 
@@ -52,6 +52,6 @@ Bizning bosh maqsadimiz — foydalanuvchiga hech qanday tibbiy tashxis qo'ymasda
 ## ⏱️ 3:00 – 3:30 | Xulosa va Kelajak (30 soniya)
 > **Kadr:** Spiker xulosasi va loyiha havolasi.
 
-"Dori Vaqti — bu oddiy, ishonchli va inson salomatligini hurmat qiladigan yechim. Keyingi bosqichda biz oflayn rejimda ishlash va qurilmaning o'zida mahalliy bildirishnomalarni (local notifications) qo'shishni rejalashtirganmiz.
+"MedTime — bu oddiy, ishonchli va inson salomatligini hurmat qiladigan yechim. Keyingi bosqichda biz oflayn rejimda ishlash va qurilmaning o'zida mahalliy bildirishnomalarni (local notifications) qo'shishni rejalashtirganmiz.
 
 Loyiha kodlari GitHub'da to'liq ochiq va Railway platformasida jonli ishlamoqda. E'tiboringiz uchun rahmat!"

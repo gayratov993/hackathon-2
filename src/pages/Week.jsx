@@ -4,11 +4,13 @@ import { useAuth } from '../context/AuthContext'
 import { Nav } from '../components/Nav'
 import { EmptyState } from '../components/EmptyState'
 import { WeekGrid } from '../components/WeekGrid'
+import { useLanguage } from '../context/LanguageContext'
 
 import { calcStreak, weekSummary } from '../lib/schedule'
 
 export function Week() {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
 
@@ -62,10 +64,10 @@ export function Week() {
   if (data.meds.length === 0) {
     return (
       <div className="max-w-md mx-auto px-4 py-6 pb-36">
-        <h1 className="anim-rise text-xl font-bold mb-6">Hafta</h1>
+        <h1 className="anim-rise text-xl font-bold mb-6">{t('week.title')}</h1>
         <EmptyState
-          title="Birinchi kuningiz."
-          body="Ertaga bu yer to'la boshlaydi."
+          title={t('week.emptyTitle')}
+          body={t('week.emptyBody')}
         />
         <Nav />
       </div>
@@ -76,17 +78,17 @@ export function Week() {
     <div className="max-w-md mx-auto px-4 py-6 pb-36">
       <header className="anim-rise mb-6">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="text-xl font-bold">Hafta</h1>
+          <h1 className="text-xl font-bold">{t('week.title')}</h1>
           <span className="anim-pop badge badge-primary gap-1.5 py-3 shadow-2xs" style={{ '--i': 2 }}>
             <span className="anim-ember inline-block" aria-hidden="true">🔥</span>
-            {streak} kunlik seriya
+            {t('week.streakBadge', streak)}
           </span>
         </div>
         <div className="anim-underline mt-1 h-0.5 w-12 rounded-full bg-primary/70" />
 
         <div className="mt-4 space-y-1.5">
           <p className="text-sm text-base-content/60">
-            Bu hafta {summary.total} dozadan {summary.taken} tasini belgiladingiz.
+            {t('week.summary', summary.total, summary.taken)}
           </p>
           <progress
             className="progress progress-primary w-full h-2 rounded-full"

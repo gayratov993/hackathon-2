@@ -6,30 +6,46 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Dori Vaqti — dori ichish vaqtini eslatuvchi ilova</title>
-  <meta name="description" content="Dori Vaqti — dorilaringizni qo'shib, har kuni ichish vaqtini eslab qoladigan va haftalik natijangizni ko'rsatadigan sodda, maxfiy ilova. Bepul, tibbiy maslahat bermaydi." />
+  <title>MedTime — dori ichish vaqtini eslatuvchi ilova</title>
+  <meta name="description" content="MedTime — dorilaringizni qo'shib, har kuni ichish vaqtini eslab qoladigan va haftalik natijangizni ko'rsatadigan sodda, maxfiy ilova. Bepul, tibbiy maslahat bermaydi." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://hackathon-2-production-b692.up.railway.app/" />
   <meta name="theme-color" content="#059669" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Dori Vaqti" />
+  <meta property="og:site_name" content="MedTime" />
   <meta property="og:locale" content="uz_UZ" />
   <meta property="og:url" content="https://hackathon-2-production-b692.up.railway.app/" />
-  <meta property="og:title" content="Dori Vaqti — dori ichish vaqtini eslatuvchi ilova" />
+  <meta property="og:title" content="MedTime — dori ichish vaqtini eslatuvchi ilova" />
   <meta property="og:description" content="Dorilaringizni qo'shing, har kuni belgilangan dozalarni bir bosishda belgilang va haftalik natijangizni ko'ring. Bepul, maxfiy, diagnostika bermaydi." />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Dori Vaqti — dori ichish vaqtini eslatuvchi ilova" />
+  <meta name="twitter:title" content="MedTime — dori ichish vaqtini eslatuvchi ilova" />
   <meta name="twitter:description" content="Dorilaringizni qo'shing, har kuni belgilangan dozalarni bir bosishda belgilang va haftalik natijangizni ko'ring." />
 
   <meta name="google-site-verification" content="j_jwAKQfO7Olt7Hm0p0hSZoq2MnEH8Z4Fajf7B10Ri8" />
+
+  <script>
+    // Applies the stored theme/language before first paint so dark mode does
+    // not flash light on load. ThemeContext takes over once React mounts.
+    (function () {
+      try {
+        var t = localStorage.getItem('medtime-theme');
+        if (t !== 'emerald' && t !== 'forest') {
+          t = matchMedia('(prefers-color-scheme: dark)').matches ? 'forest' : 'emerald';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+        var l = localStorage.getItem('medtime-lang');
+        if (l) document.documentElement.setAttribute('lang', l);
+      } catch (e) { /* private mode: fall back to the markup defaults */ }
+    })();
+  </script>
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Dori Vaqti",
+    "name": "MedTime",
     "applicationCategory": "HealthApplication",
     "operatingSystem": "Web",
     "url": "https://hackathon-2-production-b692.up.railway.app/",
@@ -49,18 +65,18 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Dori Vaqti nima?",
+        "name": "MedTime nima?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Dori Vaqti — dorilaringizni ichish vaqtini eslab qolish va har kuni belgilangan dozalarni kuzatib borish uchun sodda ilova. U dorilaringizni qo'shish, kunlik ro'yxatni ko'rish va \"Ichdim\" yoki \"O'tkazib yubordim\" deb belgilash imkonini beradi."
+          "text": "MedTime — dorilaringizni ichish vaqtini eslab qolish va har kuni belgilangan dozalarni kuzatib borish uchun sodda ilova. U dorilaringizni qo'shish, kunlik ro'yxatni ko'rish va \"Ichdim\" yoki \"O'tkazib yubordim\" deb belgilash imkonini beradi."
         }
       },
       {
         "@type": "Question",
-        "name": "Dori Vaqti tibbiy maslahat yoki diagnostika beradimi?",
+        "name": "MedTime tibbiy maslahat yoki diagnostika beradimi?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yo'q. Dori Vaqti faqat eslatma va kuzatuv vositasi — u dozani tavsiya qilmaydi, dori-darmon o'zaro ta'sirini tekshirmaydi va hech qanday tashxis qo'ymaydi. Dozangiz yoki davolanishingiz haqida savollar uchun shifokoringizga murojaat qiling."
+          "text": "Yo'q. MedTime faqat eslatma va kuzatuv vositasi — u dozani tavsiya qilmaydi, dori-darmon o'zaro ta'sirini tekshirmaydi va hech qanday tashxis qo'ymaydi. Dozangiz yoki davolanishingiz haqida savollar uchun shifokoringizga murojaat qiling."
         }
       },
       {
@@ -84,7 +100,7 @@
         "name": "Ilovadan foydalanish pulmi?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yo'q, Dori Vaqti hozircha to'liq bepul."
+          "text": "Yo'q, MedTime hozircha to'liq bepul."
         }
       },
       {

@@ -5,11 +5,17 @@ import { useAuth } from '../context/AuthContext'
 import { Nav } from '../components/Nav'
 import { EmptyState } from '../components/EmptyState'
 import { MedForm } from '../components/MedForm'
+import { ThemeToggle } from '../components/ThemeToggle'
+import { LanguageSwitcher } from '../components/LanguageSwitcher'
+import { useLanguage } from '../context/LanguageContext'
+import { useTheme } from '../context/ThemeContext'
 
 const toTime = (value) => (/^\d{2}:\d{2}/.test(value) ? value.slice(0, 5) : value)
 
 export function Settings() {
   const { user, signOut } = useAuth()
+  const { t } = useLanguage()
+  const { isDark } = useTheme()
   const navigate = useNavigate()
   const [meds, setMeds] = useState(null)
   const [error, setError] = useState(null)
@@ -51,7 +57,7 @@ export function Settings() {
   const load = useCallback(async () => {
     const { data, error } = await supabase
       .from('meds')
-      .select('id, name, dose_text, times, active, created_at')
+      .select('id, name, dose_text, notes, times, active, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: true })
     if (error) {
@@ -114,7 +120,12 @@ export function Settings() {
     setSaving(true)
     const { error } = await supabase
       .from('meds')
-      .update({ name: payload.name, dose_text: payload.dose_text, times: payload.times })
+      .update({
+        name: payload.name,
+        dose_text: payload.dose_text,
+        notes: payload.notes,
+        times: payload.times,
+      })
       .eq('id', editingMed.id)
     setSaving(false)
     if (error) {
@@ -172,7 +183,7 @@ export function Settings() {
     <div className="max-w-md mx-auto px-4 py-6 pb-36">
       <div className="anim-rise mb-6 flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold">Sozlamalar</h1>
+          <h1 className="text-xl font-bold">{t('settings.title')}</h1>
           <div className="anim-underline mt-1 h-0.5 w-12 rounded-full bg-primary/70" />
         </div>
         <button
@@ -181,7 +192,7 @@ export function Settings() {
           onClick={handleSignOut}
           disabled={signingOut}
         >
-          {signingOut ? <span className="loading loading-spinner loading-xs" /> : 'Chiqish'}
+          {signingOut ? <span className="loading loading-spinner loading-xs" /> : t('settings.signOut')}
         </button>
       </div>
 
@@ -207,16 +218,16 @@ export function Settings() {
             disabled={savingName}
           />
           <button type="submit" className="btn btn-primary btn-sm self-start tap" disabled={savingName}>
-            {savingName ? <span className="loading loading-spinner loading-xs" /> : 'Saqlash'}
+            {savingName ? <span className="loading loading-spinner loading-xs" /> : t('form.save')}
           </button>
         </form>
       </section>
 
       {meds.length === 0 ? (
         <EmptyState
-          title="Hali dori yo'q."
-          body="Birinchi dorini qo'shishdan boshlang."
-          actionLabel="Dori qo'shish"
+          title={t('settings.emptyTitle')}
+          body={t('settings.emptyBody')}
+          actionLabel={t('settings.addMed')}
           onAction={() => navigate('/onboarding')}
         />
       ) : (
@@ -238,13 +249,16 @@ export function Settings() {
                     <p className="text-sm text-base-content/60">{med.dose_text}</p>
                   )}
                   <p className="text-sm text-base-content/60">{med.times.map(toTime).join(' · ')}</p>
+                  {med.notes && (
+                    <p className="mt-1 text-sm italic text-base-content/50">{med.notes}</p>
+                  )}
                   {!med.active && (
-                    <span className="anim-pop badge badge-ghost badge-sm mt-1">faol emas</span>
+                    <span className="anim-pop badge badge-ghost badge-sm mt-1">{t('settings.inactive')}</span>
                   )}
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1">
                   <button className="btn btn-ghost btn-xs tap" onClick={() => openEdit(med)}>
-                    Tahrirlash
+                    {t('settings.edit')}
                   </button>
                   <button
                     className={`btn btn-ghost btn-xs tap ${
@@ -252,7 +266,7 @@ export function Settings() {
                     }`}
                     onClick={() => toggleActive(med)}
                   >
-                    {med.active ? 'O\'chirish' : 'Faollashtirish'}
+                    {med.active ? t('settings.deactivate') : t('settings.activate')}
                   </button>
                 </div>
               </div>
@@ -288,8 +302,27 @@ export function Settings() {
         )}
       </section>
 
+      <section
+        className="anim-rise mt-4 card bg-base-100 border border-base-200 p-4 gap-4"
+        style={{ '--i': 4 }}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-semibold">{t('settings.language')}</span>
+          <LanguageSwitcher />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-semibold">{t('settings.appearance')}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-base-content/60">
+              {isDark ? t('settings.darkMode') : t('settings.lightMode')}
+            </span>
+            <ThemeToggle />
+          </div>
+        </div>
+      </section>
+
       <section className="anim-rise mt-4 card bg-base-100 border border-base-200 p-4" style={{ '--i': 4 }}>
-        <h2 className="font-semibold mb-2">Ma'lumotlaringiz haqida</h2>
+        <h2 className="font-semibold mb-2">{t('settings.dataTitle')}</h2>
         <p className="text-sm text-base-content/60">
           Biz saqlaymiz: siz kiritgan nom, miqdor va vaqtlar, hamda siz belgilagan doza holati.
           Biz saqlamaymiz: tashxis, kasallik, shifokor, telefon raqam. O'tkazib yuborilgan doza
@@ -303,13 +336,13 @@ export function Settings() {
           className="btn btn-error btn-block tap hover:shadow-md"
           onClick={() => deleteDialog.current?.showModal()}
         >
-          Barcha ma'lumotlarimni o'chirish
+          {t('settings.deleteAll')}
         </button>
       </div>
 
       <dialog ref={editDialog} className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">Dorini tahrirlash</h3>
+          <h3 className="font-bold text-lg mb-4">{t('settings.editMed')}</h3>
           {editingMed && (
             <MedForm
               initial={editingMed}
@@ -325,13 +358,13 @@ export function Settings() {
 
       <dialog ref={deleteDialog} className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Barcha ma'lumotlarni o'chirish</h3>
+          <h3 className="font-bold text-lg">{t('settings.deleteTitle')}</h3>
           <p className="text-sm text-base-content/60 mt-2">
             Barcha dorilaringiz va tarixingiz butunlay o'chadi. Bu amalni qaytarib bo'lmaydi.
           </p>
           <div className="modal-action">
             <button className="btn" onClick={() => deleteDialog.current?.close()}>
-              Bekor qilish
+              {t('settings.cancel')}
             </button>
             <button
               className="btn btn-error"
@@ -341,7 +374,7 @@ export function Settings() {
               {deleting ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : (
-                'Ha, o\'chirish'
+                t('settings.confirmDelete')
               )}
             </button>
           </div>

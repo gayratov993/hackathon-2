@@ -26,14 +26,19 @@ export function AuthProvider({ children }) {
     const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) return { error }
 
-    if (data.user) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({ id: data.user.id })
-      if (profileError) return { error: profileError }
+    // With email confirmation ON, signUp returns a user but no session, so
+    // auth.uid() is still null and the profiles RLS check would reject this
+    // insert. The row is created on first successful sign-in instead.
+    if (!data.session) {
+      return { data, needsConfirmation: true }
     }
 
-    return { data }
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .upsert({ id: data.user.id }, { onConflict: 'id' })
+    if (profileError) return { error: profileError }
+
+    return { data, needsConfirmation: false }
   }
 
   async function signIn(email, password) {

@@ -178,6 +178,7 @@ export function buildDoseList(meds = [], logs = [], now = new Date()) {
         medId: med.id,
         medName: med.name || "Nomsiz dori",
         doseText: med.dose_text || '',
+        notes: med.notes || '',
         at: scheduledDate,
         timeStr: formatted,
         status,

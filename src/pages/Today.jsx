@@ -6,6 +6,7 @@ import { buildDoseList, calcStreak, formatLocalDateKey } from '../lib/schedule'
 import { DoseCard } from '../components/DoseCard'
 import { EmptyState } from '../components/EmptyState'
 import { Nav } from '../components/Nav'
+import { useLanguage } from '../context/LanguageContext'
 
 /**
  * Format a Date into Uzbek text: e.g. "16-avgust, yakshanba"
@@ -47,6 +48,7 @@ function formatUzbekDate(date) {
 
 export function Today() {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
 
   const [meds, setMeds] = useState([])
@@ -55,6 +57,7 @@ export function Today() {
   const [busyKey, setBusyKey] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [now, setNow] = useState(() => new Date())
+  const [displayName, setDisplayName] = useState('')
 
   // Update `now` every minute so overdue statuses update seamlessly
   useEffect(() => {
@@ -106,6 +109,16 @@ export function Today() {
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  useEffect(() => {
+    if (!user) return
+    supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle()
+      .then(({ data }) => setDisplayName(data?.display_name ?? ''))
+  }, [user])
 
   // Build today's dose list from pure schedule logic
   const doseList = useMemo(() => {
@@ -182,7 +195,7 @@ export function Today() {
     if (error) {
       // Roll back optimistic state on error
       setLogs(previousLogs)
-      setErrorMessage("Dozani saqlashda xatolik yuz berdi. Qaytadan urinib ko'ring.")
+      setErrorMessage(t('today.saveError'))
     } else if (data && data.length > 0) {
       // Replace temporary entry with server confirmed row
       const savedRow = data[0]
@@ -226,7 +239,7 @@ export function Today() {
               type="button"
               className="btn btn-ghost btn-xs btn-circle"
               onClick={() => setErrorMessage(null)}
-              aria-label="Xabarni yopish"
+              aria-label={t('today.dismiss')}
             >
               ✕
             </button>
@@ -259,9 +272,9 @@ export function Today() {
           /* State 2: Empty State (No active medicines) */
           <section className="anim-rise py-12" aria-label="Dorilar mavjud emas">
             <EmptyState
-              title="Dorilar ro'yxati bo'sh"
-              body="Boshlash uchun birinchi doringizni qo'shing."
-              actionLabel="Dori qo'shish"
+              title={t('today.emptyTitle')}
+              body={t('today.emptyBody')}
+              actionLabel={t('today.emptyAction')}
               onAction={() => navigate('/onboarding')}
             />
           </section>
@@ -272,6 +285,9 @@ export function Today() {
             <header className="anim-rise space-y-3 pb-2 border-b border-base-200/80">
               <div className="flex items-center justify-between gap-2">
                 <div>
+                  <p className="text-sm font-medium text-primary">
+                    {t('today.greeting', displayName)}
+                  </p>
                   <h1 className="text-xl font-bold tracking-tight text-base-content capitalize">
                     {formatUzbekDate(now)}
                   </h1>
@@ -291,10 +307,10 @@ export function Today() {
                   {streak > 0 ? (
                     <>
                       <span className="anim-ember inline-block" aria-hidden="true">🔥</span>
-                      <span>{streak} kun ketma-ket</span>
+                      <span>{t('today.streak', streak)}</span>
                     </>
                   ) : (
-                    <span>0 kun</span>
+                    <span>{t('today.streakZero')}</span>
                   )}
                 </div>
               </div>
@@ -302,7 +318,7 @@ export function Today() {
               {/* Progress Summary Line */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-xs sm:text-sm font-medium text-base-content/70">
-                  <span>Bugun: {takenDoses} / {totalDoses}</span>
+                  <span>{t('today.progress', takenDoses, totalDoses)}</span>
                   <span className="font-mono text-xs">{progressPercent}%</span>
                 </div>
                 <progress

@@ -1,12 +1,17 @@
 import { useState } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 
-const emptyInitial = { name: '', dose_text: '', times: [''] }
+const emptyInitial = { name: '', dose_text: '', times: [''], notes: '' }
+
+const NOTES_MAX = 200
 
 const toTime = (value) => (/^\d{2}:\d{2}/.test(value) ? value.slice(0, 5) : value)
 
 export function MedForm({ initial = emptyInitial, onSubmit, submitting = false }) {
+  const { t } = useLanguage()
   const [name, setName] = useState(initial.name ?? '')
   const [doseText, setDoseText] = useState(initial.dose_text ?? '')
+  const [notes, setNotes] = useState(initial.notes ?? '')
   const [times, setTimes] = useState(
     Array.isArray(initial.times) && initial.times.length > 0
       ? initial.times.map(toTime)
@@ -32,6 +37,7 @@ export function MedForm({ initial = emptyInitial, onSubmit, submitting = false }
     if (times.some((t) => !t)) next.times = 'Kamida bitta vaqt kiriting.'
     if (new Set(times.filter(Boolean)).size !== times.filter(Boolean).length)
       next.times = 'Vaqtlar takrorlanmasligi kerak.'
+    if (notes.length > NOTES_MAX) next.notes = t('form.notesTooLong')
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -43,41 +49,66 @@ export function MedForm({ initial = emptyInitial, onSubmit, submitting = false }
       name: name.trim(),
       dose_text: doseText.trim() || null,
       times: times.filter(Boolean).map(toTime),
+      notes: notes.trim() || null,
     })
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate>
       <label className="form-control flex flex-col w-full">
-        <span className="label-text">Nomi</span>
+        <span className="label-text">{t('form.name')}</span>
         <input
           type="text"
           className="input input-bordered w-full"
-          placeholder="masalan: ertalabki dori"
+          placeholder={t('form.namePlaceholder')}
           value={name}
           onChange={(e) => setName(e.target.value)}
           aria-invalid={!!errors.name}
         />
         <span className="text-sm text-base-content/60 mt-1">
-          Istagan nom bering. Biz kasallik nomini so'ramaymiz.
+          {t('form.nameHint')}
         </span>
         {errors.name && <span className="text-sm text-error mt-1">{errors.name}</span>}
       </label>
 
       <label className="form-control flex flex-col w-full mt-4">
-        <span className="label-text">Miqdori</span>
+        <span className="label-text">{t('form.dose')}</span>
         <input
           type="text"
           className="input input-bordered w-full"
-          placeholder="1 tabletka"
+          placeholder={t('form.dosePlaceholder')}
           value={doseText}
           onChange={(e) => setDoseText(e.target.value)}
         />
         <span className="text-sm text-base-content/60 mt-1">Ixtiyoriy.</span>
       </label>
 
+      <label className="form-control flex flex-col w-full mt-4">
+        <span className="label-text">{t('form.notes')}</span>
+        <textarea
+          className="textarea textarea-bordered w-full transition-all duration-200 focus:border-primary"
+          rows={2}
+          maxLength={NOTES_MAX}
+          placeholder={t('form.notesPlaceholder')}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          aria-invalid={!!errors.notes}
+        />
+        <div className="mt-1 flex items-start justify-between gap-2">
+          <span className="text-sm text-base-content/60">{t('form.notesHint')}</span>
+          <span
+            className={`shrink-0 font-mono text-xs ${
+              notes.length > NOTES_MAX - 20 ? 'text-warning' : 'text-base-content/40'
+            }`}
+          >
+            {notes.length}/{NOTES_MAX}
+          </span>
+        </div>
+        {errors.notes && <span className="text-sm text-error mt-1">{errors.notes}</span>}
+      </label>
+
       <fieldset className="mt-4">
-        <legend className="label-text">Vaqtlari</legend>
+        <legend className="label-text">{t('form.times')}</legend>
         <div className="flex flex-col gap-2">
           {times.map((time, index) => (
             <div key={index} className="flex items-center gap-2">
@@ -110,7 +141,7 @@ export function MedForm({ initial = emptyInitial, onSubmit, submitting = false }
           ))}
         </div>
         <button type="button" className="btn btn-ghost btn-sm mt-2" onClick={addTime}>
-          + vaqt qo'shish
+          + {t('form.addTime')}
         </button>
         {errors.times && <p className="text-sm text-error mt-1">{errors.times}</p>}
       </fieldset>
@@ -122,10 +153,8 @@ export function MedForm({ initial = emptyInitial, onSubmit, submitting = false }
       >
         {submitting ? (
           <span className="loading loading-spinner loading-sm" />
-        ) : initial?.name ? (
-          'Saqlash'
         ) : (
-          'Qo\'shish'
+          t('form.save')
         )}
       </button>
     </form>

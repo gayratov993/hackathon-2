@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { ThemeToggle } from '../components/ThemeToggle'
+import { LanguageSwitcher } from '../components/LanguageSwitcher'
 
 const steps = [
   {
@@ -44,12 +46,12 @@ const privacyFacts = [
 
 const faqs = [
   {
-    q: 'Dori Vaqti nima?',
-    a: 'Dori Vaqti — dorilaringizni ichish vaqtini eslab qolish va har kuni belgilangan dozalarni kuzatib borish uchun sodda ilova. U dorilaringizni qo’shish, kunlik ro’yxatni ko’rish va "Ichdim" yoki "O’tkazib yubordim" deb belgilash imkonini beradi.',
+    q: 'MedTime nima?',
+    a: 'MedTime — dorilaringizni ichish vaqtini eslab qolish va har kuni belgilangan dozalarni kuzatib borish uchun sodda ilova. U dorilaringizni qo’shish, kunlik ro’yxatni ko’rish va "Ichdim" yoki "O’tkazib yubordim" deb belgilash imkonini beradi.',
   },
   {
-    q: 'Dori Vaqti tibbiy maslahat yoki diagnostika beradimi?',
-    a: 'Yo’q. Dori Vaqti faqat eslatma va kuzatuv vositasi — u dozani tavsiya qilmaydi, dori-darmon o’zaro ta’sirini tekshirmaydi va hech qanday tashxis qo’ymaydi. Dozangiz yoki davolanishingiz haqida savollar uchun shifokoringizga murojaat qiling.',
+    q: 'MedTime tibbiy maslahat yoki diagnostika beradimi?',
+    a: 'Yo’q. MedTime faqat eslatma va kuzatuv vositasi — u dozani tavsiya qilmaydi, dori-darmon o’zaro ta’sirini tekshirmaydi va hech qanday tashxis qo’ymaydi. Dozangiz yoki davolanishingiz haqida savollar uchun shifokoringizga murojaat qiling.',
   },
   {
     q: 'Mening ma’lumotlarim xavfsizmi?',
@@ -61,7 +63,7 @@ const faqs = [
   },
   {
     q: 'Ilovadan foydalanish pulmi?',
-    a: 'Yo’q, Dori Vaqti hozircha to’liq bepul.',
+    a: 'Yo’q, MedTime hozircha to’liq bepul.',
   },
   {
     q: 'Necha xil dori qo’sha olaman va necha marta eslatma sozlay olaman?',
@@ -75,7 +77,7 @@ export function Landing() {
       <header className="sticky top-0 z-20 bg-base-100/90 backdrop-blur border-b border-base-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <span className="text-lg font-bold tracking-tight text-base-content">
-            Dori Vaqti
+            MedTime
           </span>
           <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-base-content/70">
             {[
@@ -93,9 +95,13 @@ export function Landing() {
               </a>
             ))}
           </nav>
-          <Link to="/login" className="btn btn-primary btn-sm tap hover:shadow-md hover:brightness-105">
-            Kirish
-          </Link>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher className="hidden sm:inline-flex" />
+            <ThemeToggle />
+            <Link to="/login" className="btn btn-primary btn-sm tap hover:shadow-md hover:brightness-105">
+              Kirish
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -131,7 +137,7 @@ export function Landing() {
                 className="anim-rise mt-4 text-base sm:text-lg text-base-content/70 max-w-lg"
                 style={{ '--i': 2 }}
               >
-                Dori Vaqti — dorilaringizni qo’shib, har kuni belgilangan dozalarni kuzatib
+                MedTime — dorilaringizni qo’shib, har kuni belgilangan dozalarni kuzatib
                 boradigan sodda va maxfiy ilova. Diagnostika yo’q, faqat eslatma va aniq tarix.
               </p>
               <div className="anim-rise mt-7 flex flex-wrap items-center gap-3" style={{ '--i': 3 }}>
@@ -273,7 +279,7 @@ export function Landing() {
             </ul>
             <div role="note" className="reveal alert mt-8 text-sm bg-base-200/60 border border-base-200">
               <span>
-                Dori Vaqti tibbiy maslahat bermaydi va diagnostika qilmaydi — bu faqat eslatma va
+                MedTime tibbiy maslahat bermaydi va diagnostika qilmaydi — bu faqat eslatma va
                 kuzatuv vositasi. Davolanish bo’yicha savollaringiz uchun shifokoringizga murojaat
                 qiling.
               </span>
@@ -322,7 +328,7 @@ export function Landing() {
 
       <footer className="border-t border-base-200 bg-base-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-base-content/60">
-          <span>&copy; {new Date().getFullYear()} Dori Vaqti</span>
+          <span>&copy; {new Date().getFullYear()} MedTime</span>
           <div className="flex items-center gap-5">
             <Link to="/login" className="hover:text-base-content">
               Kirish

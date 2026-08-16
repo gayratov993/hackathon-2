@@ -1,4 +1,4 @@
-# Dori Vaqti 💊
+# MedTime 💊
 > Dorilarni o'z vaqtida ichish va qabul qilish intizomini kuzatish ilovasi (Medication Reminder & Adherence Tracker).
 
 [![Railway Deploy](https://img.shields.io/badge/Deploy-Railway-success?style=flat-square&logo=railway)](https://hackathon-2-production-b692.up.railway.app)
@@ -15,7 +15,7 @@
 Kuniga bir yoki bir necha marta muntazam dori ichishi kerak bo'lgan inson (masalan, har kuni ertalab va kechqurun tabletka ichuvchi) haftaning o'rtasiga kelib dorisini ichgan yoki ichmaganini unutib qo'yadi. An'anaviy eslatma ilovalari esa ortiqcha murakkab, foydalanuvchidan shaxsiy tashxislarni talab qiladi yoki o'nlab chala funksiyalarga to'la.
 
 ### Yechim: Bitta odat — to'liq yakunlangan
-**Dori Vaqti** — faqat bitta muhim odatni boshidan oxirigacha mukammal hal qiladi:
+**MedTime** — faqat bitta muhim odatni boshidan oxirigacha mukammal hal qiladi:
 1. **Eslatish va belgilash:** Kunlik rejadagi dorilarni bir teginish bilan **"Ichdim"** yoki **"O'tkazib yubordim"** deb belgilash.
 2. **7 kunlik haftalik intizom:** Butun hafta davomida qanchalik izchil bo'lganingizni ko'rsatuvchi toza 7 kunlik ko'rinish va seriya (`streak`).
 3. **Nolinchi hukm va maslahatsizlik:** Ilova sizga tashxis qo'ymaydi, "dozani o'tkazib yubormang" deb aql o'rgatmaydi — faqat faktlarni ko'rsatadi.

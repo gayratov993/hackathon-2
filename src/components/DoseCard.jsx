@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLanguage } from '../context/LanguageContext'
 
 /**
  * Presentational card component for displaying and acting on a scheduled dose.
@@ -10,9 +11,10 @@ import React from 'react'
  * @param {boolean} busy - True if this dose is currently performing an async action
  */
 export function DoseCard({ dose, onTaken, onSkipped, busy = false, index = 0 }) {
+  const { t } = useLanguage()
   if (!dose) return null
 
-  const { medName, doseText, timeStr, status } = dose
+  const { medName, doseText, timeStr, status, notes } = dose
   const isPending = status === 'pending'
   const isOverdue = status === 'overdue'
   const isTaken = status === 'taken'
@@ -59,6 +61,23 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false, index = 0 }) 
               )}
             </div>
 
+            {notes && (
+              <p className="mt-1 flex items-start gap-1.5 text-xs text-base-content/60">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mt-0.5 h-3.5 w-3.5 shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6M9 16h4M8 4h8a2 2 0 012 2v14l-6-3-6 3V6a2 2 0 012-2z" />
+                </svg>
+                <span>{notes}</span>
+              </p>
+            )}
+
             {/* Subtitle / Status note for overdue */}
             {isOverdue && (
               <div className="anim-fade mt-1 flex items-center gap-1.5 text-xs font-medium text-warning">
@@ -75,7 +94,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false, index = 0 }) 
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Belgilangan vaqt o&apos;tgan</span>
+                <span>{t('today.overdue')}</span>
               </div>
             )}
           </div>
@@ -94,13 +113,13 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false, index = 0 }) 
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Ichildi</span>
+                <span>{t('today.takenBadge')}</span>
               </div>
             )}
 
             {isSkipped && (
               <div className="anim-pop badge badge-neutral badge-outline text-xs py-2.5 px-2.5 text-base-content/60">
-                <span>O&apos;tkazib yuborildi</span>
+                <span>{t('today.skippedBadge')}</span>
               </div>
             )}
 
@@ -146,7 +165,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false, index = 0 }) 
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>Ichdim</span>
+                  <span>{t('today.taken')}</span>
                 </>
               )}
             </button>
@@ -162,7 +181,7 @@ export function DoseCard({ dose, onTaken, onSkipped, busy = false, index = 0 }) 
               {busy ? (
                 <span className="loading loading-spinner loading-xs" />
               ) : (
-                <span>O&apos;tkazib yubordim</span>
+                <span>{t('today.skip')}</span>
               )}
             </button>
           </div>
