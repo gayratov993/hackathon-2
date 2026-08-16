@@ -30,55 +30,87 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Dori Vaqti</h1>
+    <div className="min-h-screen flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-sm">
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-7 w-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 2" />
+              <circle cx="12" cy="13" r="8" strokeLinecap="round" strokeLinejoin="round" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 3h6M12 3v2" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight">Dori Vaqti</h1>
+          <p className="text-sm text-base-content/60 mt-1">
+            Dorilaringizni ichdingizmi — shuni belgilab boring.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="card bg-base-100 shadow-sm">
-          <div className="card-body gap-3">
+        <form
+          onSubmit={handleSubmit}
+          className="card bg-base-100 border border-base-200 shadow-sm"
+        >
+          <div className="card-body gap-3 p-6">
             {error && (
-              <div role="alert" className="alert alert-error text-sm">
+              <div role="alert" className="alert alert-error text-sm py-2">
                 <span>{error}</span>
               </div>
             )}
 
-            <label className="fieldset-label" htmlFor="email">
-              Email
+            <label className="flex flex-col gap-1" htmlFor="email">
+              <span className="text-sm font-medium text-base-content/80">Email</span>
+              <input
+                id="email"
+                type="email"
+                required
+                autoComplete="email"
+                className="input input-bordered w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={submitting}
+              />
             </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              className="input input-bordered w-full"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={submitting}
-            />
 
-            <label className="fieldset-label" htmlFor="password">
-              Parol
+            <label className="flex flex-col gap-1" htmlFor="password">
+              <span className="text-sm font-medium text-base-content/80">Parol</span>
+              <input
+                id="password"
+                type="password"
+                required
+                minLength={6}
+                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                className="input input-bordered w-full"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={submitting}
+              />
             </label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={6}
-              autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-              className="input input-bordered w-full"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={submitting}
-            />
 
-            <button type="submit" className="btn btn-primary mt-2" disabled={submitting}>
-              {submitting && <span className="loading loading-spinner loading-sm" />}
-              {mode === 'signin' ? 'Kirish' : "Ro'yxatdan o'tish"}
+            <button
+              type="submit"
+              className="btn btn-primary mt-3 min-h-[44px]"
+              disabled={submitting}
+            >
+              {submitting ? (
+                <span className="loading loading-spinner loading-sm" />
+              ) : mode === 'signin' ? (
+                'Kirish'
+              ) : (
+                "Ro'yxatdan o'tish"
+              )}
             </button>
 
             <button
               type="button"
-              className="btn btn-ghost btn-sm"
+              className="btn btn-ghost btn-sm font-normal text-base-content/70"
               disabled={submitting}
               onClick={() => {
                 setMode(mode === 'signin' ? 'signup' : 'signin')

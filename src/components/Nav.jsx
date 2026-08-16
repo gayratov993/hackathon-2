@@ -9,13 +9,13 @@ const links = [
 export function Nav() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-10">
-      <div className="btm-nav max-w-md mx-auto">
+      <div className="dock max-w-md mx-auto border-t border-base-200">
         {links.map(({ to, label, icon }) => (
           <NavLink
             key={to}
             to={to}
             end={to === '/'}
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            className={({ isActive }) => (isActive ? 'dock-active' : '')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,7 @@ export function Nav() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
             </svg>
-            <span className="btm-nav-label">{label}</span>
+            <span className="dock-label">{label}</span>
           </NavLink>
         ))}
       </div>

@@ -200,7 +200,7 @@ export function Today() {
   const handleSkipped = (dose) => handleLogDose(dose, 'skipped')
 
   return (
-    <div className="min-h-screen bg-base-100 flex flex-col justify-between max-w-md mx-auto">
+    <div className="min-h-screen flex flex-col justify-between max-w-md mx-auto">
       {/* Main Content Area */}
       <main className="flex-1 px-4 pt-6 pb-24 w-full">
         {/* Error Toast Notification */}

@@ -22,7 +22,7 @@ person's files — ping them in chat instead.
 - [x] Create the Supabase project, run `schema.sql`, disable "Confirm email"
 - [x] RLS proof: two test users via the Auth API, confirmed user2's read of `meds` returns zero
       rows after user1 inserted one — **still needs a UI screenshot once Login.jsx exists, D needs that for the video**
-- [ ] Post `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` (anon only) to the team chat
+- [x] Post `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` (anon only) to the team chat
 - [x] Railway service live: https://hackathon-2-production-b692.up.railway.app (repo root,
       `npm run build`, static `dist/`, env vars set)
       — ⚠️ **auto-deploy on push is NOT wired up** (GitHub App likely lacks repo access under
@@ -99,10 +99,10 @@ Found and fixed during review:
 - [ ] Video script (skeleton in `D.md`), rehearsed out loud, target 3:30, hard range 3:00–4:00
 - [ ] README: problem, who it's for, screenshots, stack, setup steps
       (`.env.example` → `npm i` → `npm run dev`), schema, data/privacy section from `CLAUDE.md` §4
-- [ ] `scripts/seed.js` — idempotent, inserts 2 meds + 6 backdated days of logs, **two deliberate
+- [x] `scripts/seed.js` — idempotent, inserts 2 meds + 6 backdated days of logs, **two deliberate
       gaps** (one skipped, one missing) — can be written against the schema before UI exists
-- [ ] Document demo account credentials in team chat, **not in the repo**
-- [ ] QA on the **deployed** URL (not localhost): fresh signup → logged dose, `/week` and
+- [x] Document demo account credentials in team chat, **not in the repo**
+- [x] QA on the **deployed** URL (not localhost): fresh signup → logged dose, `/week` and
       `/settings` refresh with no 404, 375px on a real phone, error states don't crash,
       `grep -rn "console.log" src/` empty, no `service_role` key or `.env.local` in git history,
       repo public (verify in a private window), no diagnosing/advising/warning text anywhere
