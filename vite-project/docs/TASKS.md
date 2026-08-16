@@ -19,8 +19,9 @@ person's files — ping them in chat instead.
 - [x] `src/context/AuthContext.jsx` — session/user/loading, signUp/signIn/signOut
 - [x] `App.jsx` routes + guards (no session → `/login`, zero meds → `/onboarding`)
 - [x] `supabase/schema.sql` committed to repo
-- [ ] Create the Supabase project, run `schema.sql`, disable "Confirm email"
-- [ ] RLS proof: two test users, confirm cross-account reads return zero rows — **screenshot it, D needs this**
+- [x] Create the Supabase project, run `schema.sql`, disable "Confirm email"
+- [x] RLS proof: two test users via the Auth API, confirmed user2's read of `meds` returns zero
+      rows after user1 inserted one — **still needs a UI screenshot once Login.jsx exists, D needs that for the video**
 - [ ] Post `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` (anon only) to the team chat
 - [ ] Railway service from the repo, build `npm run build`, output `dist/`, env vars set
 - [ ] SPA fallback so `/week` doesn't 404 on refresh
