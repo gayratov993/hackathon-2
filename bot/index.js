@@ -1,4 +1,4 @@
-// Dori Vaqti Telegram reminder bot. Standalone process — never bundled into
+// MedTime Telegram reminder bot. Standalone process — never bundled into
 // the Vite app. Deploy as its own Railway service (or run anywhere long-lived).
 //
 // Required env vars:
@@ -57,7 +57,7 @@ async function handleStart(chatId, code) {
   if (!code) {
     await sendMessage(
       chatId,
-      "Salom! Dori Vaqti ilovasidagi Sozlamalar bo'limidan ulanish kodini oling va /start <kod> deb yozing.",
+      "Salom! MedTime ilovasidagi Sozlamalar bo'limidan ulanish kodini oling va /start <kod> deb yozing.",
     )
     return
   }
@@ -100,11 +100,27 @@ async function checkDueDoses() {
   const now = new Date()
   const windowStart = new Date(now.getTime() - 60_000)
 
+  // meds.user_id and profiles.id both reference auth.users, but there's no
+  // FK between meds and profiles directly, so PostgREST can't embed one from
+  // the other — join them in JS instead.
+  const { data: profiles, error: profilesError } = await supabase
+    .from('profiles')
+    .select('id, telegram_chat_id')
+    .not('telegram_chat_id', 'is', null)
+
+  if (profilesError) {
+    console.error('Failed to load profiles:', profilesError.message)
+    return
+  }
+
+  const chatIdByUser = new Map(profiles.map((p) => [p.id, p.telegram_chat_id]))
+  if (chatIdByUser.size === 0) return
+
   const { data: meds, error: medsError } = await supabase
     .from('meds')
-    .select('id, user_id, name, dose_text, times, active, profiles(telegram_chat_id)')
+    .select('id, user_id, name, dose_text, times, active')
     .eq('active', true)
-    .not('profiles.telegram_chat_id', 'is', null)
+    .in('user_id', [...chatIdByUser.keys()])
 
   if (medsError) {
     console.error('Failed to load meds:', medsError.message)
@@ -112,7 +128,7 @@ async function checkDueDoses() {
   }
 
   for (const med of meds ?? []) {
-    const chatId = med.profiles?.telegram_chat_id
+    const chatId = chatIdByUser.get(med.user_id)
     if (!chatId) continue
 
     for (const timeStr of med.times ?? []) {
@@ -139,7 +155,7 @@ async function checkDueDoses() {
   }
 }
 
-console.log('Dori Vaqti bot started.')
+console.log('MedTime bot started.')
 
 async function loop() {
   try {
