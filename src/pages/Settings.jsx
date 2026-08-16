@@ -6,6 +6,8 @@ import { Nav } from '../components/Nav'
 import { EmptyState } from '../components/EmptyState'
 import { MedForm } from '../components/MedForm'
 
+const toTime = (value) => (/^\d{2}:\d{2}/.test(value) ? value.slice(0, 5) : value)
+
 export function Settings() {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -128,7 +130,7 @@ export function Settings() {
                   {med.dose_text && (
                     <p className="text-sm text-base-content/60">{med.dose_text}</p>
                   )}
-                  <p className="text-sm text-base-content/60">{med.times.join(' · ')}</p>
+                  <p className="text-sm text-base-content/60">{med.times.map(toTime).join(' · ')}</p>
                   {!med.active && <span className="badge badge-ghost badge-sm mt-1">faol emas</span>}
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1">

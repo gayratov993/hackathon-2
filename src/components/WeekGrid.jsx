@@ -11,7 +11,7 @@ const cellClasses = {
   full: 'bg-success border-success text-success-content',
   hollow: 'border-success border-2 bg-transparent',
   empty: 'border border-base-300 bg-base-200',
-  faint: 'border border-base-200 bg-base-100 opacity-30',
+  faint: 'border border-dashed border-base-300 bg-base-200/40',
 }
 
 const legend = [

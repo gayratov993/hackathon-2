@@ -48,7 +48,7 @@ export function MedForm({ initial = emptyInitial, onSubmit, submitting = false }
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <label className="form-control w-full">
+      <label className="form-control flex flex-col w-full">
         <span className="label-text">Nomi</span>
         <input
           type="text"
@@ -64,7 +64,7 @@ export function MedForm({ initial = emptyInitial, onSubmit, submitting = false }
         {errors.name && <span className="text-sm text-error mt-1">{errors.name}</span>}
       </label>
 
-      <label className="form-control w-full mt-4">
+      <label className="form-control flex flex-col w-full mt-4">
         <span className="label-text">Miqdori</span>
         <input
           type="text"
