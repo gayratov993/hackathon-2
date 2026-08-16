@@ -24,12 +24,17 @@ person's files — ping them in chat instead.
       rows after user1 inserted one — **still needs a UI screenshot once Login.jsx exists, D needs that for the video**
 - [ ] Post `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` (anon only) to the team chat
 - [x] Railway service live: https://hackathon-2-production-b692.up.railway.app (repo root,
-      `npm run build`, static `dist/`, env vars set, auto-deploys on push to `main`)
+      `npm run build`, static `dist/`, env vars set)
+      — ⚠️ **auto-deploy on push is NOT wired up** (GitHub App likely lacks repo access under
+      this Railway account). Every push to `main` needs a manual redeploy trigger until fixed —
+      check Railway dashboard → Service → Settings → Source.
 - [x] SPA fallback confirmed — `/week` returns 200 directly, no 404 on refresh
 - [ ] Supabase Auth → URL Configuration → add Railway URL to Site URL + Redirect URLs
       (needs Supabase dashboard access — not done yet)
-- [ ] `src/pages/Login.jsx` — real email/password form, `alert alert-error` on failure
-- [ ] After 12:30: integrator — merge B and C into `main`, redeploy after every merge, **13:00 feature freeze**
+- [x] `src/pages/Login.jsx` — real email/password form, `alert alert-error` on failure,
+      verified end-to-end (sign-up → session → correct route-guard redirect)
+- [x] Integrator: merged B (`Sardor`) and C (`feat/c-screens`) into `main`, redeployed, verified
+      live. Found and fixed 3 bugs in review — see B/C sections below.
 
 ---
 
@@ -37,15 +42,19 @@ person's files — ping them in chat instead.
 **Branch:** `feat/b-today` · owns `src/lib/schedule.js`, `src/components/DoseCard.jsx`, `src/pages/Today.jsx`
 **Start now — no dependency on A.** Work against a hardcoded fixture until real data exists.
 
-- [ ] `lib/schedule.js`: `buildDoseList(meds, logs, now)`, `calcStreak(logs, meds, today)`,
+- [x] `lib/schedule.js`: `buildDoseList(meds, logs, now)`, `calcStreak(logs, meds, today)`,
       `weekSummary(logs, meds, today)` — pure functions, no React/Supabase imports
-  - [ ] Handle: med with two times/day, med added mid-week, a day with zero meds
-  - [ ] **Post the function signatures to the group chat by 11:00** — C builds against them
-- [ ] `components/DoseCard.jsx` — presentational, `{ dose, onTaken, onSkipped, busy }`
-  - [ ] Four visual states: pending, overdue, taken, skipped; buttons only on pending/overdue
-- [ ] `pages/Today.jsx` — fetch meds + today's logs, loading/empty/loaded states, optimistic
+  - [x] Handles: med with two times/day, med added mid-week, a day with zero meds
+- [x] `components/DoseCard.jsx` — presentational, `{ dose, onTaken, onSkipped, busy }`
+  - [x] Four visual states: pending, overdue, taken, skipped; buttons only on pending/overdue
+- [x] `pages/Today.jsx` — fetch meds + today's logs, loading/empty/loaded states, optimistic
       taken/skipped logging via `upsert` with rollback + `alert alert-error` on failure
-- [ ] All UI strings in Uzbek; state facts only — never advice or warnings
+- [x] All UI strings in Uzbek; state facts only — never advice or warnings
+
+**Verified live** (fresh account, med with two daily times): mark taken → optimistic UI updates
+instantly → survives page refresh → confirmed exactly one `med_logs` row (no duplicate) via API.
+`src/lib/supabase.js` had picked up a fallback-to-fake-demo-credentials change in B's branch —
+reverted during merge (silent fallback masks real misconfig, against CLAUDE.md §6).
 
 **Do not touch:** `context/`, `App.jsx`, `index.css` (A) · `Week.jsx`, `WeekGrid.jsx`,
 `Onboarding.jsx`, `Settings.jsx`, `MedForm.jsx` (C)
@@ -59,15 +68,25 @@ person's files — ping them in chat instead.
 **Start now — no dependency on A.** Get B's `calcStreak`/`weekSummary` signatures at 11:00 and
 build against a fixture until the real ones land.
 
-- [ ] `components/MedForm.jsx` — Nomi / Miqdori / Vaqtlari (+ vaqt qo'shish), inline validation,
+- [x] `components/MedForm.jsx` — Nomi / Miqdori / Vaqtlari (+ vaqt qo'shish), inline validation,
       no `alert()`, and the "biz kasallik nomini so'ramaymiz" microcopy under Nomi
-- [ ] `components/EmptyState.jsx` + `components/Nav.jsx` (bottom `btm-nav`, active route highlighted)
-- [ ] `pages/Onboarding.jsx` — one screen, `MedForm` → insert `meds` → navigate to `/`
-- [ ] `pages/Week.jsx` + `components/WeekGrid.jsx` — 7-day grid, 4 cell states + legend, streak
+- [x] `components/EmptyState.jsx` + `components/Nav.jsx` (bottom `btm-nav`, active route highlighted)
+- [x] `pages/Onboarding.jsx` — one screen, `MedForm` → insert `meds` → navigate to `/`
+- [x] `pages/Week.jsx` + `components/WeekGrid.jsx` — 7-day grid, 4 cell states + legend, streak
       badge, one factual summary line, day-1 empty state copy
-- [ ] `pages/Settings.jsx` — med list with edit + deactivate (never hard-delete),
-      **"Barcha ma'lumotlarimni o'chirish"** with modal confirm — build this even under time pressure
-- [ ] Data/privacy static text, copied from `CLAUDE.md` §4
+- [x] `pages/Settings.jsx` — med list with edit + deactivate (never hard-delete),
+      **"Barcha ma'lumotlarimni o'chirish"** with modal confirm
+- [x] Data/privacy static text, copied from `CLAUDE.md` §4
+
+**Verified live end-to-end**: fresh signup → onboarding → add med → lands on Today with the
+dose rendered. Delete-my-data confirmed to empty both tables and redirect to onboarding.
+Found and fixed during review:
+- `MedForm`: daisyUI 5 removed `form-control`'s flex layout, so label groups collapsed inline —
+  helper text ran into the next field's label (`...so'ramaymiz.Miqdori`). Added `flex flex-col`.
+- `WeekGrid`: the "faint" cell state was invisible (near-white on white). Switched to a dashed
+  border + translucent fill.
+- `Settings`: med times list showed raw `"08:00:00"` instead of `"08:00"` — reused the
+  seconds-truncation helper from `MedForm`.
 
 **Do not touch:** `Today.jsx`, `DoseCard.jsx`, `lib/schedule.js` (B) · `App.jsx`, `context/`, `index.css` (A)
 
