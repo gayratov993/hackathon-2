@@ -23,9 +23,11 @@ person's files — ping them in chat instead.
 - [x] RLS proof: two test users via the Auth API, confirmed user2's read of `meds` returns zero
       rows after user1 inserted one — **still needs a UI screenshot once Login.jsx exists, D needs that for the video**
 - [ ] Post `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` (anon only) to the team chat
-- [ ] Railway service from the repo, build `npm run build`, output `dist/`, env vars set
-- [ ] SPA fallback so `/week` doesn't 404 on refresh
+- [x] Railway service live: https://hackathon-2-production-b692.up.railway.app (repo root,
+      `npm run build`, static `dist/`, env vars set, auto-deploys on push to `main`)
+- [x] SPA fallback confirmed — `/week` returns 200 directly, no 404 on refresh
 - [ ] Supabase Auth → URL Configuration → add Railway URL to Site URL + Redirect URLs
+      (needs Supabase dashboard access — not done yet)
 - [ ] `src/pages/Login.jsx` — real email/password form, `alert alert-error` on failure
 - [ ] After 12:30: integrator — merge B and C into `main`, redeploy after every merge, **13:00 feature freeze**
 
