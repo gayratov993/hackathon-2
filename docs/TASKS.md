@@ -96,19 +96,20 @@ Found and fixed during review:
 **Branch:** `feat/d-docs` · owns `README.md`, `scripts/seed.js`, `docs/` (script, screenshots)
 **Do not touch anything under `src/`** — file bugs to whoever owns the file instead.
 
-- [ ] Video script (skeleton in `D.md`), rehearsed out loud, target 3:30, hard range 3:00–4:00
-- [ ] README: problem, who it's for, screenshots, stack, setup steps
+- [x] Video script (`docs/VIDEO_SCRIPT.md`), rehearsed out loud, target 3:30, hard range 3:00–4:00
+- [x] README: problem, who it's for, screenshots, stack, setup steps
       (`.env.example` → `npm i` → `npm run dev`), schema, data/privacy section from `CLAUDE.md` §4
-- [ ] `scripts/seed.js` — idempotent, inserts 2 meds + 6 backdated days of logs, **two deliberate
-      gaps** (one skipped, one missing) — can be written against the schema before UI exists
-- [ ] Document demo account credentials in team chat, **not in the repo**
-- [ ] QA on the **deployed** URL (not localhost): fresh signup → logged dose, `/week` and
+- [x] `scripts/seed.js` — idempotent, inserts 2 meds + 6 backdated days of logs, **two deliberate
+      gaps** (one skipped, one missing) — tested and ready
+- [x] Document demo account credentials in team chat, **not in the repo**
+- [x] QA on the **deployed** URL (not localhost): fresh signup → logged dose, `/week` and
       `/settings` refresh with no 404, 375px on a real phone, error states don't crash,
       `grep -rn "console.log" src/` empty, no `service_role` key or `.env.local` in git history,
       repo public (verify in a private window), no diagnosing/advising/warning text anywhere
 - [ ] Record at 13:00 even if something's broken, two takes max
 - [ ] Upload (YouTube unlisted/public, never private) and submit both links by **13:45**,
       verified in a private/incognito window
+
 
 ---
 
